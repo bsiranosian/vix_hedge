@@ -1,0 +1,68 @@
+Volatility as an asset class - replication of results in Doran 2020 and extension to a leveraged risk-parity portfolio.
+
+This post is going to be a departure from the usual genomics tilt of this blog. I've recently been interested in the science (art?) of hedging a portfolio against market downturns. Hedging is difficult and involves the selection of the right asset class, right allocation (holding too much of the hedge and you underperform in all markets) and right time to remove the hedge (ideally at the bottom of a correction). If the VIX (CBOE Volatility Index) were direclty investable, holding it as an asset in a portfoio would provide a significant edge. However, you cannot directly "buy" the VIX, and tradeable vix products (like VXX, UVXY, etc) have notable underperformance when used as a hedge (refs). 
+
+A paper by James Doran (2020) proposed that a portfolio of SPX options that is highly correlated to the VIX could be held as a long-term hedge.  The portfolio buys an ITM-OTM put spread and sells an ATM-OTM call spread when the VIX is at normal values, and does not hedge when the VIX is above the mean plus one standard deviation. In this way the portfolio systematically removes the hedge when vol is the most expensive and thefeore more likely to revert to the mean. 
+
+I was interested in replicating the results of this paper, extending the findings to the end of 2020 (the paper stops in 2017), and finding if the option portfolio would hedge a leveraged stock portfolio holding UPRO (3X leveraged S&P500). The leveraged portfolio idea comes from the famous "HEDGEFUNDIE's excellent adventure" thread on the Bogleheads forum (Page 1: https://www.bogleheads.org/forum/viewtopic.php?f=10&t=272007 Page 2: https://www.bogleheads.org/forum/viewtopic.php?f=10&t=288192) with  ideas going back to the "lifecycle investing" and "diversification across time" from Ayres and Nalebuff (2008, 2010). Basically, it makes sense to use leverage to obtain higher investmet returns when you're young and expect to have higher earnings in the future. You can do this with margin, futures, LEAPS options, or leveraged index funds. The index funds appaer to be the easiest way to obtain consistent and cheap leverage without risk of a margin call. The portfolio holds 55% UPRO and 45% TMF (3X bonds) and typically rebalances monthly. I've also thrown some TQQQ (3X leveraged nasdq) into the mix. These portfolios outperform a 100% stocks or an unleveraged 60/40 portfolio on BOTH a absolute and risk-adjusted return basis. However, if you could hold VIX as an asset to rebalance out of, performance would be even better. Hence my interest in replicating the VIX with options.
+
+# Step 0: Obtain data, write backtest code
+Option data: I obtained end of day option prices for the SPX index from Stanford's subscription to OptionMetrics (https://optionmetrics.com/) for 1996-2019. 2020 data were purchased from historicaloptiondata.com. 
+
+Extended UPRO and TMF data: These products began trading in 2009, but we definitely want to include the early 2000s tech bubble and 2008 financial crisis in our backtests. Someone on the bogleheads forum simulated the funds going back to 1986, and they're available here (https://drive.google.com/drive/folders/1Byo8z6oSbZrvK9t5R072gH4tBWMebsAB).
+
+I wrote a simple program to backtest an option portfolio in R. This program buys a 30 DTE spread as described above and typically holds to expiration, while tracking the value of the spread each day. When VIX is low, a fixed percentage of the portfolio value is placed into the option portion during each rebalance, which occurs when the options expire. When VIX is high (above mean plus one standard deviation), the portfolio only holds the base asset class (SPX or UPRO). If VIX transitions from low to high, the hedge is immediately abandoned, and if VIX transitions from high to low, the hedge is repurchased. 
+
+# Step 1: replicate the results of Doran (2020) with the SPX index
+To ensure our option backtest works as expected, I first replicated the results from the Doran paper using the SPX index. I allocated a fixed 5% to the hedge, but found better results with the spreads  10%. Pictured below are the returns of these strategies starting with a portfolio of $100,000. Although the hedge does well in negative markets, the underperformance in the bull market of the last 10 years is very visible. The hedge also didn't protect much agains the rapid COVID crash in March 2020 - I think because VIX spiked very quicly and the portfolio wasn't hedged for much of the crash. My results don't exactly match those in the paper (even using a 5% spread width). I think differences in the option prices, especially early in the dataset, are playing a role in this. 
+
+5% allocation 
+                                               SPX       VIX     VIXsd       OPT     OPTsd      UPRO UPROvixsd UPROoptsd
+Annualized StdDev Sharpe (Rf=0%, p=95%): 0.4825594 0.7686226 0.8871295 0.3932862 0.6421459 0.2013747 0.3601669 0.3865830
+                     SPX       VIX     VIXsd       OPT     OPTsd      UPRO UPROvixsd UPROoptsd
+Worst Drawdown 0.5255586 0.4345776 0.4565887 0.3515961 0.4120784 0.9748276 0.9536308 0.8938864
+                                    SPX      VIX     VIXsd       OPT     OPTsd      UPRO UPROvixsd UPROoptsd
+Annualized Standard Deviation 0.1530898 0.113979 0.1333188 0.0771443 0.1125411 0.4680456  0.432368 0.3614976
+CAGR               SPX      VIX    VIXsd      OPT    OPTsd     UPRO UPROvixsd UPROoptsd
+2020-12-31         7.485019 8.828884 11.88584 2.912399 7.084612 9.718793  15.82289   14.0089
+
+# Step 2: extending the option model to a portfolio holding UPRO 
+How do we do using the 3X leveraged fund UPRO? I conducted the same backtest, and found that 10% allocated to the hedge is better. This makes sense - you need something with higher volatility to balance out the extreme swings in UPRO. How did the hedge do? Defintiely better than holding UPRO alone, which has pathetic stats over this time period. Better returns than holding SPX alone, but more variance and a equivalent Sharpe ratio. Holding the VIX as an asset is still the winner here. 
+
+# 10% hedge allocation
+                                               SPX      VIX    VIXsd        OPT     OPTsd      UPRO UPROvixsd UPROoptsd
+Annualized StdDev Sharpe (Rf=0%, p=95%): 0.4825594 1.021849 1.193865 -0.1822880 0.1920002 0.2013747 0.5274108 0.4861021
+                     SPX       VIX     VIXsd       OPT     OPTsd      UPRO UPROvixsd UPROoptsd
+Worst Drawdown 0.5255586 0.3550462 0.4203897 0.7501951 0.6737977 0.9748276 0.9176598 0.8773407
+                                    SPX        VIX     VIXsd       OPT     OPTsd      UPRO UPROvixsd UPROoptsd
+Annualized Standard Deviation 0.1530898 0.09725678 0.1344991 0.1951869 0.2294232 0.4680456 0.4051311 0.3161098
+CAGR            SPX      VIX    VIXsd       OPT    OPTsd     UPRO UPROvixsd UPROoptsd
+2020-12-31 7.485019 9.976836 16.07517 -3.876871 4.029539 9.718793  21.56973  15.12306
+
+
+# Comparison to UPRO/TMF portfolio
+The option-hedged portfolio needs to outperform a 55/45% UPRO/TMF portfolio for me to consider running it for real. I used portfoliovisualizer.com to easily compare these portfolios with monly rebalancing. 
+Portfolio 1 (blue)  : UPROoptSD
+Portfolio 2 (red)   : UPRO/TMF 55/45
+Portfolio 3 (yellow): UPRO/VIX 70/30
+
+The returns with TMF have less variance and end up about equal over this time period. However, in the period until 2008, the option portfolio defintiely outperformed. Holding VIX is again the clear winer in both absoulte and risk-adjusted returns, but still suffers severe drawdowns. 
+
+# Conclusions 
+I don't think holding this portfolio will provide a significant advantage compared to a UPRO/TMF portfolio. Given the limitations below and no significant outperformance, I won't be voting with my wallet. The option hedge portfolio did provide significant advantages in the 1996-2008 period, where it outperformed all other portfolios (even the optimal 70/30 UPRO/VIX!) with a sharpe ratio of 1.01 and max drawdown of 47% in the dotcom crash. I may paper-trade this strategy to get a feel for position sizing, though. 
+
+# Limitations: Why I won't be hedging with this method 
+1) This model assumes all transactions occur at the midpoint of the bid-ask spread and does not take into account transaction costs. While transaction costs are relatively small, SPX/XSP can have relatively wide bid-ask spreads, much wider than SPY. 
+2) Options can by illiquid, only purchased in fixed qnatities, and difficult to adjust. Today with SPX at 3750, Buying one SPX 30d ITM-OTM put spread costs $16100. Adding the call spread brings the cost down to $9340 but brings the max loss of the position to $27340! Trading on XSP brings the cost down by a factor of 10. With a 1% hedge, this method is only good for portfolios >100k. As a 5% hedge this can be used on a portfolio as small as 20k. Still, what do you do when the optimal amount of hedge is 1.5 XSP contracts? These challenges are less with a larger portfolio. 
+3) It's more complicated than simply rebalancing between UPRO and TMF, requiring more active management time. 
+4) It didn't even outperform UPRO/TMF in many contexts! 
+5) Bactests are only backward-looking and easy to overfit to your problem. 
+
+# other things to explore in the model that I didn't test 
+1) Optimal hedge amount - was not optimized scientifically, I just tried a few values and decided based on returns and Sharpe ratio.
+2) Differing DTE on position opening an closing. 30 days and holding to expiration may not be optimal 
+3) Selecting strikes based on Delta instead of fixed percentage ITM/OTM. This would result in different strikes selected in times of low and high vol,  but probbaly has a minimal impact.
+4) The max loss of these spreads can be quite high compared to the cost to enter the trade - maybe the hedge amount should be scaled based on the max loss of the position (with the remaining invested in the base asset or held in cash).
+
+
+Questions? Other ideas to test? Let me know! I'll also happily release returns or code (it's not pretty) if you are interested. 
