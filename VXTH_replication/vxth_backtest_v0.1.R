@@ -10,7 +10,6 @@ source('~/projects/vix_hedge/VXTH_replication/vixth_functions.R')
 price.df <- read.table('~/option_data/vxth_project/all_prices.tsv', sep='\t', quote='', header=T,
                        colClasses = c('Date', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric'))
 price.xts <- xts(price.df[,2:ncol(price.df)],order.by = price.df$date)
-rownames(price.df) <- price.df$date
 # option price array list
 # this is midpoint
 mid.list <- readRDS('~/option_data/vxth_project/price_list_2021-01-11.rds')
@@ -23,7 +22,7 @@ delta.list <- readRDS('~/option_data/vxth_project/delta_list_2021-01-11.rds')
 fut.df <- read.table('~/option_data/vix_futures/quandl_vix_futures_cleaned.tsv', sep='\t', quote='', header = T,
                     colClasses = c('Date', 'numeric', 'numeric', 'numeric'))
 fut.xts <- xts(fut.df[,2:ncol(fut.df)],order.by = fut.df$date)
-# Data from 2006-03-22 onward
+# Data from 2006-03-22 onward (until Dec 2019 for now)
 trade.dates <- names(mid.list)
 # where to save results for each run of the backtest
 out.basedir <- '/home/bsiranos/pcloud_sync/stanford/class/mse_448/backtest_results'
@@ -58,33 +57,28 @@ vix.thresholds <- matrix(c(0, 15,
                            30, 50,
                            50, 100),
                          byrow = T, nrow=4, dimnames=list(1:4, c('low', 'high')))
-trade.dates <- names(mid.list)
-# end.date <- '2008-11-19'
-end.date <- '2020-12-31'
-trade.dates <- trade.dates[1:which(trade.dates==end.date)]
+
 
 ######################################
 # Variable params ####################
 ######################################
-# save to a folder all of this info from the run
-tt <- gsub(':', '-', gsub(' ', '_', as.character(Sys.time())))
-outdir <- file.path(out.basedir, tt)
-dir.create(outdir)
-# this now allows for buying multiple different instruments
-# each with the same delta, but varying expirations
 starting.i <- 1
 this.date <- trade.dates[starting.i]
-dte.open.list <- c(35, 65, 95)
+dte.open <- 35
 dte.close <- 0
 params <- NULL
 # delta of the vix calls to buy
-option.delta <- 0.1
+option.delta <- 0.3
 # get portfolios
 # a matrix for portfolios under the four vix levels
-vix.allocations <- c(0.00, 0.005, 0.01, 0)
+vix.allocations <- c(0.00, 0.01, 0.05, 0)
 portfolio.allocations <- get_portfolios(vix.allocations)
 daily.rebalance <- F
 
+# save to a folder all of this info from the run
+# tt <- gsub(':', '-', gsub(' ', '_', as.character(Sys.time())))
+# outdir <- file.path(out.basedir, tt)
+# dir.create(outdir)
 
 # which portfolios change between vix high and low?
 # change.portfolios <- !sapply(1:n.portfolio, function(x) identical(portfolio.allocations.vixhigh[,x], portfolio.allocations.vixlow[,x]))
@@ -108,26 +102,17 @@ if (is.null(params)){
   portfolio.allocations.vix <- portfolio.allocations[[vix.regime]]
 
   # get the option trade stats
-  # list of parameters for each option
-  param.list <- lapply(dte.open.list, function(dte.open)  get_trade_params(this.date, dte.open, option.delta))
-  # in some cases we cant find the right expirations, so eliminate the duplicates here
-  param.list <- param.list[!duplicated(sapply(param.list, function(x) x$tenor))]
-
-  current.dte.list <- sapply(param.list, function(params) as.integer(as.Date(params[['tenor']])) - as.integer(as.Date(this.date)))
-  current.value.list <- sapply(param.list, function(params) mid.list[[this.date]]['C', params$tenor, params$strike])
-
+  params <- get_trade_params(this.date, dte.open, option.delta)
+  current.dte <- as.integer(as.Date(params[['tenor']])) - as.integer(as.Date(this.date))
+  current.value <- mid.list[[this.date]]['C', params$tenor, params$strike]
   # set up trade logging df
+  trade.log <- c(this.date, vix.close, vx.close, vix.regime, unlist(params), current.dte, current.value, 0)
   trade.log.df <- data.frame()
-  for (i in 1:length(param.list)){
-    trade.log <- c(this.date, vix.close, vx.close, vix.regime, unlist(param.list[i]), current.dte.list[i], current.value.list[i], 0)
-    trade.log.df <- rbind(trade.log.df, c(trade.log))
-
-  }
+  trade.log.df <- rbind(trade.log.df, c(trade.log))
   colnames(trade.log.df) <- c('date', 'vix.close', 'vx.close', 'vix.regime', 'tenor', 'strike', 'purchase.dte', 'purchase.value', 'expiration.value')
+  # print(as.character(params))
+  last.value <- current.value
   trade.today = TRUE
-
-  # price of the option portfolio today is the sum, can assume we basically had one share of each
-  current.value <- sum(current.value.list, na.rm = T)
 
   price.vec <- c(spx.close, upro.close, tmf.close, current.value)
   # allocate the initial portfolios
@@ -142,7 +127,7 @@ if (is.null(params)){
 for (this.date in trade.dates[(starting.i + 1):length(trade.dates)]){
   # reset params
   last.vix.regime <- vix.regime
-  last.value.list <- current.value.list
+  last.value <- current.value
 
   # values today
   spx.close <- as.numeric(price.xts[this.date, "SPX"])
@@ -158,32 +143,16 @@ for (this.date in trade.dates[(starting.i + 1):length(trade.dates)]){
   }
   portfolio.allocations.vix <- portfolio.allocations[[vix.regime]]
 
-  current.dte.list <- sapply(param.list, function(params) as.integer(as.Date(params[['tenor']])) - as.integer(as.Date(this.date)))
-  # get value at expiration, for those that have expired
-  if(any(current.dte.list <= dte.close)){
-    expired.index <- which(current.dte.list <= dte.close)
-    non.expired.index <- which(current.dte.list > dte.close)
-    tryCatch(expired.value.list <- sapply(expired.index, function(i) max(0, vix.close - as.numeric(param.list[[i]]$strike))),
-             error=function(e) return(last.value.list[expired.index]))
-
-    tryCatch(non.expired.value.list <- sapply(non.expired.index, function(i) mid.list[[this.date]]['C', param.list[[i]]$tenor, param.list[[i]]$strike]),
-             error=function(e) return(last.value.list[non.expired.index]))
-
-    current.value.list <- last.value.list
-    current.value.list[expired.index] <- expired.value.list
-    current.value.list[non.expired.index] <- non.expired.value.list
-    current.value.list <- unlist(current.value.list)
-    # tryCatch(current.value.list <- c(max(0, vix.close - as.numeric(param.list[[1]]$strike)),
-    #                                  sapply(param.list[2:length(param.list)], function(params) mid.list[[this.date]]['C', params$tenor, params$strike])),
-    #          error=function(e) return(last.value.list))
-
+  current.dte <- as.integer(as.Date(params[['tenor']])) - as.integer(as.Date(this.date))
+  # custom get value at expiration
+  if(current.dte <= 0){
+    current.value <- max(0, vix.close - as.numeric(params$strike))
   } else {
-    tryCatch(current.value.list <- sapply(param.list, function(params) mid.list[[this.date]]['C', params$tenor, params$strike]), error=function(e) return(last.value.list))
+    tryCatch(current.value <- mid.list[[this.date]]['C', params$tenor, params$strike],error=function(e) return(last.value))
     # check for nan
-    if (any(is.nan(current.value.list))){ current.value.list[is.nan(current.value.list)] <- last.value.list[is.nan(current.value.list)]}
+    if (is.nan(current.value)){ current.value <- last.value }
   }
-  today.option.value.list <- current.value.list
-  current.value <- sum(current.value.list, na.rm = T)
+  today.option.value <- current.value
 
   # accounting value today
   price.vec <- c(spx.close, upro.close, tmf.close, current.value)
@@ -191,40 +160,20 @@ for (this.date in trade.dates[(starting.i + 1):length(trade.dates)]){
   portfolio.values[this.date, ] <- portfolio.value.today
 
   # if we want to rebalance daily and not just at expiration
-  # disable this for now
-  # if (daily.rebalance){
-  if (F){
-      portfolio.shares <-  portfolio.allocations.vix *
+  if (daily.rebalance){
+    portfolio.shares <-  portfolio.allocations.vix *
       matrix(portfolio.values[this.date, ], ncol=n.portfolio, nrow=n.allocations, byrow = T) /
       matrix(price.vec, ncol = n.portfolio, nrow=n.allocations)
   }
   # only need new options if at expiration
   # for right now - only rebalancing here
-  if(current.dte.list[1] <= dte.close){
-    # print(param.list)
-    # get a new trade, for the furthest out DTE
-    params.closed <- param.list[[1]]
-    param.list <- param.list[-1]
-    # we want to open as many new trades as we can
-    # to account for the fact that there's some deduplication happning
-    num.trades.to.open <- length(dte.open.list) - length(param.list)
-    dte.to.open <- rev(dte.open.list[rev(1:length(dte.open.list))[1:num.trades.to.open]])
-    new.params <- lapply(dte.to.open, function(dte) get_trade_params(this.date, dte, option.delta))
-    param.list <- append(param.list, new.params)
-    # sort them because some times things get out of order when missing dates
-    tenor.order <- order(sapply(param.list, function(x) x$tenor))
-    param.list <- param.list[tenor.order]
-    # ensure we don't have any duplicates, again
-    param.list <- param.list[!duplicated(sapply(param.list, function(x) x$tenor))]
+  if(current.dte <= dte.close){
 
+    params <- get_trade_params(this.date, dte.open, option.delta)
+    new.dte <- as.integer(as.Date(params[['tenor']])) - as.integer(as.Date(this.date))
     print(paste(this.date, 'VIX:', vix.close, 'VX1', vx.close, "REGIME:", vix.regime))
-    # print('#### NEW ####')
-    # print(new.params)
-    # print('#### FULL ####')
-    # print(param.list)
-
-    current.value.list <- sapply(param.list, function(params) mid.list[[this.date]]['C', params$tenor, params$strike])
-    current.value <- sum(current.value.list, na.rm = T)
+    print(as.character(params))
+    current.value <- mid.list[[this.date]]['C', params$tenor, params$strike]
     price.vec <- c(spx.close, upro.close, tmf.close, current.value)
     # allocate the initial portfolios
     portfolio.shares <-  portfolio.allocations.vix *
@@ -232,19 +181,9 @@ for (this.date in trade.dates[(starting.i + 1):length(trade.dates)]){
       matrix(price.vec, ncol = n.portfolio, nrow=n.allocations)
     print(portfolio.shares)
     # save this info for each trade date
-    # should be just adding one and closing one per time
-    # find the right row for the trade we closed
-    log.match <- which(trade.log.df$tenor==params.closed$tenor & trade.log.df$strike==params.closed$strike)
-    trade.log.df[log.match, "expiration.value"] <- today.option.value.list[1]
-    # add the new row for the new trade
-    for (i in 1:length(new.params)){
-      this.params <- new.params[[i]]
-      new.dte <- as.integer(as.Date(this.params[['tenor']])) - as.integer(as.Date(this.date))
-      trade.log <- c(this.date, vix.close, vx.close, vix.regime, unlist(this.params), new.dte, current.value, 0)
-      trade.log.df <- rbind(trade.log.df, trade.log)
-    }
-    # trade.log <- c(this.date, vix.close, vx.close, vix.regime, unlist(param.list[i]), current.dte.list[i], current.value.list[i], 0)
-
+    trade.log.df[nrow(trade.log.df), "expiration.value"] <- today.option.value
+    trade.log <- c(this.date, vix.close, vx.close, vix.regime, unlist(params), new.dte, current.value, 0)
+    trade.log.df <- rbind(trade.log.df, trade.log)
 
   }
 
@@ -260,7 +199,7 @@ portfolio.values.df <- as.data.frame(portfolio.values)
 portfolio.values.df$date <- as.Date(rownames(portfolio.values.df))
 rownames(portfolio.values.df) <- portfolio.values.df$date
 # add VXTH
-portfolio.values.df$VXTH <- price.df[as.character(portfolio.values.df$date), 'VXTH'] * (starting.balance / price.df$VXTH[1])
+portfolio.values.df$VXTH <- price.df$VXTH * (starting.balance / price.df$VXTH[1])
 # date first
 portfolio.values.df <- portfolio.values.df[, c("date", colnames(portfolio.values.df)[colnames(portfolio.values.df) != 'date'])]
 # STATSTICS
@@ -298,7 +237,7 @@ p1 <- ggplot(pvm) +
   geom_line(aes(x=date, y=value/100000, col=variable)) +
   theme_bw() +
   scale_y_log10() +
-  scale_x_date(date_breaks = 'years') +
+  scale_x_date() +
   labs('Backtest equity curves', y='log Value / 100000', x='Date')
 
 p2 <- ggplot(pvm) +
@@ -323,7 +262,7 @@ write.table(c('# starting balance', starting.balance), outf.log, sep='\t', quote
 write.table(c('# VIX thresholds'), outf.log, sep='\t', quote=F, row.names = F, col.names = F, append = T)
 write.table(vix.thresholds, outf.log, sep='\t', quote=F, row.names = F, col.names = F, append=T)
 write.table(c('# dte.open'), outf.log, sep='\t', quote=F, row.names = F, col.names = F, append = T)
-write.table(as.character(dte.open.list), outf.log, sep='\t', quote=F, row.names = F, col.names = F, append=T)
+write.table(dte.open, outf.log, sep='\t', quote=F, row.names = F, col.names = F, append=T)
 write.table(c('# dte.close'), outf.log, sep='\t', quote=F, row.names = F, col.names = F, append = T)
 write.table(dte.close, outf.log, sep='\t', quote=F, row.names = F, col.names = F, append=T)
 write.table(c('# option.delta'), outf.log, sep='\t', quote=F, row.names = F, col.names = F, append = T)
