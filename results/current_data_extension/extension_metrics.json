@@ -1,0 +1,629 @@
+{
+  "validation_2006_2020": {
+    "window": [
+      "2006-03-22",
+      "2020-12-31"
+    ],
+    "metrics": {
+      "SPX unhedged": {
+        "CAGR %": 7.41,
+        "Sharpe": 0.49,
+        "Sortino": 0.71,
+        "Vol %": 15.25,
+        "MaxDD %": 56.78,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": -47.05,
+        "Q4 2018": -19.78,
+        "COVID 2020": -33.92
+      },
+      "single 30d 50\u0394": {
+        "CAGR %": 8.86,
+        "Sharpe": 0.65,
+        "Sortino": 1.17,
+        "Vol %": 13.79,
+        "MaxDD %": 45.76,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": -30.16,
+        "Q4 2018": -17.05,
+        "COVID 2020": 4.24
+      },
+      "single 30d 30\u0394": {
+        "CAGR %": 10.62,
+        "Sharpe": 0.58,
+        "Sortino": 1.3,
+        "Vol %": 18.61,
+        "MaxDD %": 41.81,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": -19.76,
+        "Q4 2018": -19.86,
+        "COVID 2020": 29.08
+      },
+      "single 30d 20\u0394": {
+        "CAGR %": 12.02,
+        "Sharpe": 0.47,
+        "Sortino": 1.39,
+        "Vol %": 25.91,
+        "MaxDD %": 42.51,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": -11.83,
+        "Q4 2018": -20.41,
+        "COVID 2020": 60.13
+      },
+      "single 30d 10\u0394": {
+        "CAGR %": 14.64,
+        "Sharpe": 0.33,
+        "Sortino": 1.61,
+        "Vol %": 44.91,
+        "MaxDD %": 41.4,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": 13.4,
+        "Q4 2018": -20.54,
+        "COVID 2020": 125.89
+      },
+      "single 30d 5\u0394": {
+        "CAGR %": 18.08,
+        "Sharpe": 0.22,
+        "Sortino": 1.8,
+        "Vol %": 83.62,
+        "MaxDD %": 50.09,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": 27.53,
+        "Q4 2018": -20.84,
+        "COVID 2020": 247.55
+      },
+      "ladder 30/60/90 50\u0394": {
+        "CAGR %": 9.24,
+        "Sharpe": 0.66,
+        "Sortino": 1.15,
+        "Vol %": 14.15,
+        "MaxDD %": 50.9,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": -38.87,
+        "Q4 2018": -18.43,
+        "COVID 2020": 0.12
+      },
+      "ladder 30/60/90 30\u0394": {
+        "CAGR %": 10.34,
+        "Sharpe": 0.55,
+        "Sortino": 1.31,
+        "Vol %": 18.96,
+        "MaxDD %": 48.35,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": -34.01,
+        "Q4 2018": -19.0,
+        "COVID 2020": 26.24
+      },
+      "ladder 30/60/90 20\u0394": {
+        "CAGR %": 11.53,
+        "Sharpe": 0.43,
+        "Sortino": 1.41,
+        "Vol %": 26.96,
+        "MaxDD %": 47.19,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": -30.88,
+        "Q4 2018": -19.95,
+        "COVID 2020": 56.73
+      },
+      "ladder 30/60/90 10\u0394": {
+        "CAGR %": 14.68,
+        "Sharpe": 0.31,
+        "Sortino": 1.73,
+        "Vol %": 48.4,
+        "MaxDD %": 45.66,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": -26.51,
+        "Q4 2018": -20.28,
+        "COVID 2020": 125.89
+      },
+      "ladder 30/60/90 5\u0394": {
+        "CAGR %": 18.94,
+        "Sharpe": 0.23,
+        "Sortino": 2.21,
+        "Vol %": 81.99,
+        "MaxDD %": 39.53,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": -12.96,
+        "Q4 2018": -20.43,
+        "COVID 2020": 226.55
+      }
+    }
+  },
+  "full_2006_2025": {
+    "window": [
+      "2006-03-22",
+      "2025-08-29"
+    ],
+    "metrics": {
+      "SPX unhedged": {
+        "CAGR %": 8.57,
+        "Sharpe": 0.56,
+        "Sortino": 0.83,
+        "Vol %": 15.3,
+        "MaxDD %": 56.78,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": -47.05,
+        "Q4 2018": -19.78,
+        "COVID 2020": -33.92,
+        "2022 Bear": -25.43,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -18.9
+      },
+      "single 30d 50\u0394": {
+        "CAGR %": 8.46,
+        "Sharpe": 0.62,
+        "Sortino": 1.05,
+        "Vol %": 13.78,
+        "MaxDD %": 45.76,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": -30.16,
+        "Q4 2018": -17.05,
+        "COVID 2020": 4.24,
+        "2022 Bear": -25.11,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -8.48
+      },
+      "single 30d 30\u0394": {
+        "CAGR %": 9.23,
+        "Sharpe": 0.53,
+        "Sortino": 1.07,
+        "Vol %": 17.66,
+        "MaxDD %": 41.81,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": -19.76,
+        "Q4 2018": -19.86,
+        "COVID 2020": 29.08,
+        "2022 Bear": -28.64,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -6.34
+      },
+      "single 30d 20\u0394": {
+        "CAGR %": 9.67,
+        "Sharpe": 0.41,
+        "Sortino": 1.07,
+        "Vol %": 23.64,
+        "MaxDD %": 42.51,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": -11.83,
+        "Q4 2018": -20.41,
+        "COVID 2020": 60.13,
+        "2022 Bear": -29.91,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -6.0
+      },
+      "single 30d 10\u0394": {
+        "CAGR %": 11.25,
+        "Sharpe": 0.28,
+        "Sortino": 1.19,
+        "Vol %": 39.81,
+        "MaxDD %": 41.4,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": 13.4,
+        "Q4 2018": -20.54,
+        "COVID 2020": 125.89,
+        "2022 Bear": -30.13,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -6.84
+      },
+      "single 30d 5\u0394": {
+        "CAGR %": 13.8,
+        "Sharpe": 0.19,
+        "Sortino": 1.36,
+        "Vol %": 73.27,
+        "MaxDD %": 50.09,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": 27.53,
+        "Q4 2018": -20.84,
+        "COVID 2020": 247.55,
+        "2022 Bear": -30.19,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -12.0
+      },
+      "ladder 30/60/90 50\u0394": {
+        "CAGR %": 8.94,
+        "Sharpe": 0.64,
+        "Sortino": 1.06,
+        "Vol %": 14.15,
+        "MaxDD %": 50.9,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": -38.87,
+        "Q4 2018": -18.43,
+        "COVID 2020": 0.12,
+        "2022 Bear": -25.73,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -14.9
+      },
+      "ladder 30/60/90 30\u0394": {
+        "CAGR %": 9.45,
+        "Sharpe": 0.53,
+        "Sortino": 1.12,
+        "Vol %": 17.96,
+        "MaxDD %": 48.35,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": -34.01,
+        "Q4 2018": -19.0,
+        "COVID 2020": 26.24,
+        "2022 Bear": -27.13,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -12.9
+      },
+      "ladder 30/60/90 20\u0394": {
+        "CAGR %": 10.18,
+        "Sharpe": 0.42,
+        "Sortino": 1.18,
+        "Vol %": 24.54,
+        "MaxDD %": 47.19,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": -30.88,
+        "Q4 2018": -19.95,
+        "COVID 2020": 56.73,
+        "2022 Bear": -27.35,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -11.72
+      },
+      "ladder 30/60/90 10\u0394": {
+        "CAGR %": 12.47,
+        "Sharpe": 0.29,
+        "Sortino": 1.4,
+        "Vol %": 42.79,
+        "MaxDD %": 45.66,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": -26.51,
+        "Q4 2018": -20.28,
+        "COVID 2020": 125.89,
+        "2022 Bear": -27.51,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -12.22
+      },
+      "ladder 30/60/90 5\u0394": {
+        "CAGR %": 15.59,
+        "Sharpe": 0.22,
+        "Sortino": 1.73,
+        "Vol %": 71.84,
+        "MaxDD %": 39.53,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": -12.96,
+        "Q4 2018": -20.43,
+        "COVID 2020": 226.55,
+        "2022 Bear": -27.51,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -14.54
+      }
+    }
+  },
+  "oos_2021_2025": {
+    "window": [
+      "2021-01-01",
+      "2025-08-29"
+    ],
+    "metrics": {
+      "SPX unhedged": {
+        "CAGR %": 12.72,
+        "Sharpe": 0.82,
+        "Sortino": 1.3,
+        "Vol %": 15.67,
+        "MaxDD %": 25.43,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": NaN,
+        "Q4 2018": NaN,
+        "COVID 2020": NaN,
+        "2022 Bear": -25.43,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -18.9
+      },
+      "single 30d 50\u0394": {
+        "CAGR %": 7.5,
+        "Sharpe": 0.52,
+        "Sortino": 0.78,
+        "Vol %": 14.0,
+        "MaxDD %": 25.4,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": NaN,
+        "Q4 2018": NaN,
+        "COVID 2020": NaN,
+        "2022 Bear": -25.11,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -8.48
+      },
+      "single 30d 30\u0394": {
+        "CAGR %": 5.23,
+        "Sharpe": 0.35,
+        "Sortino": 0.5,
+        "Vol %": 14.47,
+        "MaxDD %": 29.21,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": NaN,
+        "Q4 2018": NaN,
+        "COVID 2020": NaN,
+        "2022 Bear": -28.64,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -6.34
+      },
+      "single 30d 20\u0394": {
+        "CAGR %": 2.81,
+        "Sharpe": 0.18,
+        "Sortino": 0.25,
+        "Vol %": 14.36,
+        "MaxDD %": 30.44,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": NaN,
+        "Q4 2018": NaN,
+        "COVID 2020": NaN,
+        "2022 Bear": -29.91,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -6.0
+      },
+      "single 30d 10\u0394": {
+        "CAGR %": 1.42,
+        "Sharpe": 0.08,
+        "Sortino": 0.11,
+        "Vol %": 14.67,
+        "MaxDD %": 30.46,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": NaN,
+        "Q4 2018": NaN,
+        "COVID 2020": NaN,
+        "2022 Bear": -30.13,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -6.84
+      },
+      "single 30d 5\u0394": {
+        "CAGR %": 1.42,
+        "Sharpe": 0.07,
+        "Sortino": 0.1,
+        "Vol %": 14.87,
+        "MaxDD %": 30.54,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": NaN,
+        "Q4 2018": NaN,
+        "COVID 2020": NaN,
+        "2022 Bear": -30.19,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -12.0
+      },
+      "ladder 30/60/90 50\u0394": {
+        "CAGR %": 8.41,
+        "Sharpe": 0.58,
+        "Sortino": 0.86,
+        "Vol %": 14.44,
+        "MaxDD %": 25.87,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": NaN,
+        "Q4 2018": NaN,
+        "COVID 2020": NaN,
+        "2022 Bear": -25.73,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -14.9
+      },
+      "ladder 30/60/90 30\u0394": {
+        "CAGR %": 7.09,
+        "Sharpe": 0.48,
+        "Sortino": 0.71,
+        "Vol %": 14.61,
+        "MaxDD %": 27.37,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": NaN,
+        "Q4 2018": NaN,
+        "COVID 2020": NaN,
+        "2022 Bear": -27.13,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -12.9
+      },
+      "ladder 30/60/90 20\u0394": {
+        "CAGR %": 6.4,
+        "Sharpe": 0.43,
+        "Sortino": 0.63,
+        "Vol %": 14.69,
+        "MaxDD %": 27.59,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": NaN,
+        "Q4 2018": NaN,
+        "COVID 2020": NaN,
+        "2022 Bear": -27.35,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -11.72
+      },
+      "ladder 30/60/90 10\u0394": {
+        "CAGR %": 6.12,
+        "Sharpe": 0.41,
+        "Sortino": 0.59,
+        "Vol %": 14.8,
+        "MaxDD %": 27.79,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": NaN,
+        "Q4 2018": NaN,
+        "COVID 2020": NaN,
+        "2022 Bear": -27.51,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -12.22
+      },
+      "ladder 30/60/90 5\u0394": {
+        "CAGR %": 5.92,
+        "Sharpe": 0.36,
+        "Sortino": 0.52,
+        "Vol %": 15.03,
+        "MaxDD %": 27.8,
+        "DotCom 2000-02": NaN,
+        "GFC 2008-09": NaN,
+        "Q4 2018": NaN,
+        "COVID 2020": NaN,
+        "2022 Bear": -27.51,
+        "Aug-2024 unwind": -8.49,
+        "2025 Tariff": -14.54
+      }
+    }
+  },
+  "robustness_full": {
+    "single 30d 30\u0394": {
+      "CAGR range (pp)": 0.117,
+      "Sharpe range": 0.003,
+      "tranched CAGR %": 9.342,
+      "tranched Sharpe": 0.524
+    },
+    "ladder 30/60/90 50\u0394": {
+      "CAGR range (pp)": 0.116,
+      "Sharpe range": 0.003,
+      "tranched CAGR %": 9.047,
+      "tranched Sharpe": 0.633
+    },
+    "ladder 30/60/90 30\u0394": {
+      "CAGR range (pp)": 0.117,
+      "Sharpe range": 0.003,
+      "tranched CAGR %": 9.559,
+      "tranched Sharpe": 0.527
+    },
+    "ladder 30/60/90 10\u0394": {
+      "CAGR range (pp)": 0.123,
+      "Sharpe range": 0.001,
+      "tranched CAGR %": 12.591,
+      "tranched Sharpe": 0.292
+    },
+    "ladder 30/60/90 5\u0394": {
+      "CAGR range (pp)": 0.132,
+      "Sharpe range": 0.0,
+      "tranched CAGR %": 15.719,
+      "tranched Sharpe": 0.218
+    }
+  },
+  "roll_phase": {
+    "window": [
+      "2017-01-01",
+      "2021-12-31"
+    ],
+    "single": {
+      "-14": {
+        "CAGR %": 14.71,
+        "Sharpe": 1.01,
+        "COVID 2020 %": -10.37
+      },
+      "-7": {
+        "CAGR %": 8.38,
+        "Sharpe": 0.53,
+        "COVID 2020 %": -22.15
+      },
+      "0": {
+        "CAGR %": 23.9,
+        "Sharpe": 0.92,
+        "COVID 2020 %": 29.08
+      },
+      "7": {
+        "CAGR %": 18.91,
+        "Sharpe": 1.51,
+        "COVID 2020 %": -5.88
+      },
+      "14": {
+        "CAGR %": 16.84,
+        "Sharpe": 1.26,
+        "COVID 2020 %": -10.37
+      },
+      "range": {
+        "CAGR %": 15.52,
+        "Sharpe": 0.97,
+        "COVID 2020 %": 51.24
+      }
+    },
+    "ladder": {
+      "-14": {
+        "CAGR %": 26.11,
+        "Sharpe": 0.96,
+        "COVID 2020 %": 26.24
+      },
+      "-7": {
+        "CAGR %": 27.29,
+        "Sharpe": 1.0,
+        "COVID 2020 %": 26.24
+      },
+      "0": {
+        "CAGR %": 27.29,
+        "Sharpe": 1.0,
+        "COVID 2020 %": 26.24
+      },
+      "7": {
+        "CAGR %": 27.29,
+        "Sharpe": 1.0,
+        "COVID 2020 %": 26.24
+      },
+      "14": {
+        "CAGR %": 28.96,
+        "Sharpe": 0.96,
+        "COVID 2020 %": 33.66
+      },
+      "range": {
+        "CAGR %": 2.85,
+        "Sharpe": 0.05,
+        "COVID 2020 %": 7.42
+      }
+    }
+  },
+  "gate_robustness": {
+    "window": [
+      "2006-03-22",
+      "2025-08-29"
+    ],
+    "config": "ladder 30/60/90 50\u0394",
+    "vx1": {
+      "-2": {
+        "CAGR %": 9.01,
+        "Sharpe": 0.64,
+        "COVID 2020 %": 0.12
+      },
+      "-1": {
+        "CAGR %": 8.89,
+        "Sharpe": 0.63,
+        "COVID 2020 %": 0.12
+      },
+      "0": {
+        "CAGR %": 8.94,
+        "Sharpe": 0.64,
+        "COVID 2020 %": 0.12
+      },
+      "1": {
+        "CAGR %": 7.12,
+        "Sharpe": 0.53,
+        "COVID 2020 %": -33.92
+      },
+      "2": {
+        "CAGR %": 7.08,
+        "Sharpe": 0.52,
+        "COVID 2020 %": -33.92
+      },
+      "range": {
+        "CAGR %": 1.93,
+        "Sharpe": 0.12,
+        "COVID 2020 %": 34.05
+      }
+    },
+    "cmf30": {
+      "-2": {
+        "CAGR %": 9.02,
+        "Sharpe": 0.64,
+        "COVID 2020 %": 0.12
+      },
+      "-1": {
+        "CAGR %": 8.84,
+        "Sharpe": 0.63,
+        "COVID 2020 %": 0.12
+      },
+      "0": {
+        "CAGR %": 8.94,
+        "Sharpe": 0.64,
+        "COVID 2020 %": 0.12
+      },
+      "1": {
+        "CAGR %": 8.98,
+        "Sharpe": 0.64,
+        "COVID 2020 %": 0.12
+      },
+      "2": {
+        "CAGR %": 9.1,
+        "Sharpe": 0.64,
+        "COVID 2020 %": 0.12
+      },
+      "range": {
+        "CAGR %": 0.26,
+        "Sharpe": 0.02,
+        "COVID 2020 %": 0.0
+      }
+    }
+  },
+  "base": "SPX"
+}
