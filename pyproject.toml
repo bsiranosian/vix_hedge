@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vix_hedge"
+version = "0.1.0"
+description = "Tail-risk hedging with VIX call options: a reproducible backtest of the delta dial, the tenor ladder, and timing/boundary-luck robustness (MSE448)."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.0",
+    "pandas>=2.2",
+    "duckdb>=1.1",
+    "pyarrow>=17.0",
+    "matplotlib>=3.9",
+    "scipy>=1.13",
+    "tqdm>=4.66",
+    "plotly>=6.7.0",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Put the repo root on sys.path so `from tests.conftest import ...` resolves under
+# every invocation (the `pytest` console script and xdist workers don't add cwd the
+# way `python -m pytest` does).
+pythonpath = ["."]
+# -n auto parallelizes across cores (pytest-xdist); add -n0 on the CLI to disable
+# it for a single-test debug run.
+addopts = "-ra -n auto"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+extend-exclude = ["notebooks", "*.ipynb", "*.R"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E741"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-xdist>=3.6",
+    "ruff>=0.6",
+]
