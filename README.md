@@ -42,6 +42,48 @@ story**. Other research directions explored separately are not included here.
 
 ## Quickstart
 
+### Data you need
+
+Raw data lives **outside the repo** in `../option_data` (override with `$OPTION_DATA`)
+and is git-ignored. The price and futures series are **free**; only the **VIX option
+chain** must be sourced. `data.build` cleans whatever is present into the parquet caches.
+
+**Price & futures series — free**
+
+| series | format `data.build` expects | where to get it (free) |
+|---|---|---|
+| **VIX spot** (daily close) | `VIX_History.csv` — `DATE,OPEN,HIGH,LOW,CLOSE`, 1990→present | CBOE: `https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv` |
+| **S&P 500 spot** (daily close) | `SP500_FRED.csv` — `observation_date,SP500` | FRED `SP500` (≈ last 10y): `https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500`. For the full 1996+ history use **Stooq** (`^SPX`) or **Yahoo Finance** (`^GSPC`) |
+| **VIX (VX) futures** → VX1 / CMF30 gate | per-contract CBOE CSVs (fetched automatically) | `uv run python -m vix_hedge.data.vix_futures` pulls them from CBOE's CDN (retained ≈ 2013→present). **Optional** — absent it, the gate falls back to the put-call-parity forward (tracks CMF30 to ~0.3 vol pts) |
+| **VXTH index** (CBOE benchmark) | `VXTH_History.csv` | CBOE CDN (same host as the VIX history) |
+
+(`src/vix_hedge/config.py` holds the exact URLs and filenames.)
+
+**VIX option chain — the one input you must obtain**
+
+Expected format: an **OptionMetrics IvyDB** end-of-day file (CSV or `.csv.gz`), one row
+per option per day. `data.build` reads these columns:
+
+```
+date (YYYYMMDD)  exdate (YYYYMMDD)  cp_flag (C/P)  strike_price (×1000)
+best_bid  best_offer  delta  forward_price
+```
+
+e.g. `…,20060224,20060322,C,10000,2,2.5,…,0.8675,…,12.1,…` is a 24-Feb-2006 VIX **10**-strike
+call (`strike_price / 1000`), bid 2.0 / ask 2.5, Δ 0.87, forward 12.1.
+
+* **Primary source — OptionMetrics IvyDB US**, via **WRDS** (Wharton Research Data
+  Services; academic / institutional subscription). This is the 2006→present VIX option
+  history used throughout.
+* **Alternative / lower-cost sources:**
+  * **[historicaloptiondata.com](https://historicaloptiondata.com/)** (a.k.a.
+    DiscountOptionData) — inexpensive per-year EOD CSVs; what I've bought for ad-hoc
+    top-ups (the 2019–2020 data here). `data.build` already parses its schema
+    (`quotedate, expiration, type, strike, bid, ask, delta, underlying_last`).
+  * **CBOE DataShop**, **ORATS**, **iVolatility** — other vendors with VIX option history.
+
+### Build & run
+
 ```bash
 uv sync                                            # Python 3.12 env
 uv run python -m vix_hedge.data.build              # raw CSV/gz -> cleaned parquet (~30 s)
@@ -141,9 +183,10 @@ with `--signal`:
 ## Data
 
 Raw OptionMetrics / purchased EOD data is expected in `../option_data` (override
-with `$OPTION_DATA`) and is **not redistributed here** (licensed). The cleaned
-parquet caches it produces live under `data/cache/` and are git-ignored. `data.build`
-writes:
+with `$OPTION_DATA`) and is **not redistributed here** (licensed) — see
+[Quickstart → Data you need](#data-you-need) for where to obtain each series. The
+cleaned parquet caches it produces live under `data/cache/` and are git-ignored.
+`data.build` writes:
 
 * `spot_prices.parquet` — daily SPX & VIX closes, 1996 → 2020.
 * `vix_options.parquet` — cleaned VIX option rows (mid, delta, bid/ask).
